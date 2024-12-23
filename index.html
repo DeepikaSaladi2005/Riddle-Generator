@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riddle Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            background: linear-gradient(to bottom, skyblue 20%, lightpink 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #ffffff;
+            background: linear-gradient(to bottom, #2193b0    20%,   #6dd5ed 100%);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #question {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #444;
+        }
+
+        #answer {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Riddle Generator</h1>
+        <p id="question">Click the button to generate a riddle!</p>
+        <p id="answer"></p>
+        <button id="generateRiddle">Generate Riddle</button>
+        <button id="showAnswer" style="display: none;">Show Answer</button>
+    </div>
+
+    <script>
+        const apiKey = 'EZGUAiSnJhmjyWVNv7h7jg==kePxTm75Icfrg1Tv';
+        const apiUrl = 'https://api.api-ninjas.com/v1/riddles';
+
+        const questionElement = document.getElementById('question');
+        const answerElement = document.getElementById('answer');
+        const generateButton = document.getElementById('generateRiddle');
+        const showAnswerButton = document.getElementById('showAnswer');
+
+        generateButton.addEventListener('click', async () => {
+            questionElement.textContent = 'Loading riddle...';
+            answerElement.style.display = 'none';
+            showAnswerButton.style.display = 'none';
+
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'X-Api-Key': apiKey
+                    }
+                });
+
+                if (response.ok) {
+                    const riddles = await response.json();
+                    const riddle = riddles[0]; // Take the first riddle from the response
+
+                    questionElement.textContent = riddle.question;
+                    answerElement.textContent = riddle.answer;
+                    showAnswerButton.style.display = 'inline-block';
+                } else {
+                    questionElement.textContent = 'Failed to load riddle. Please try again.';
+                }
+            } catch (error) {
+                questionElement.textContent = 'An error occurred. Please try again.';
+            }
+        });
+
+        showAnswerButton.addEventListener('click', () => {
+            answerElement.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
